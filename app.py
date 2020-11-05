@@ -14,9 +14,10 @@ def extract():
 
     if url == None:
         return 'URL is required', 400
-    urllib.request.urlretrieve(url, "tmp.html")
 
-    text = textract.process("tmp.html")
+    filename, headers = urllib.request.urlretrieve(url)
+    text = textract.process(filename)
+
     return text
 
 
