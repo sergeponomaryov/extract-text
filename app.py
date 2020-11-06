@@ -31,10 +31,9 @@ def extract():
 
     # add try/catch for loading and parsing
     # add binary file input
-    # mp3 parsing doesnt work - try deploying on lambda first..
     # add some max file size validation
-    # set up ssl
-    # set up that server on boot and test
+    # uwsgi - make sure it works when you close terminal, and on boot. Errors can be seen from worker, log them somewhere
+    # mp3 parsing - missing extension, add suffix to temp file, or just name temp file same as source file
 
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36')]
