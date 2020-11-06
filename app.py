@@ -1,6 +1,7 @@
 import urllib.request
 from os.path import splitext
 from urllib.parse import urlparse
+import tempfile
 
 import textract
 from flask import Flask, jsonify, request
@@ -35,11 +36,14 @@ def extract():
     # uwsgi - make sure it works when you close terminal, and on boot. Errors can be seen from worker, log them somewhere
     # mp3 parsing - missing extension, add suffix to temp file, or just name temp file same as source file
 
+    # create temp file
+    temp = tempfile.NamedTemporaryFile(suffix='.'+ext)
+
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36')]
     urllib.request.install_opener(opener)
-    filename, headers = urllib.request.urlretrieve(url)
-    text = textract.process(filename, extension=ext)
+    urllib.request.urlretrieve(url, temp.name)
+    text = textract.process(temp.name, extension=ext)
     resp = {}
     resp['success'] = True
     resp['text'] = str(text)
