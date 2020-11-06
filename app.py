@@ -34,10 +34,7 @@ def extract():
     # add try/catch for loading and parsing
     # add binary file input
     # add some max file size validation. 100M?
-    # uwsgi - make sure it works when you close terminal, and on boot. Errors can be seen from worker, log them somewhere. supervisor
-    # restart server on changes
     # add firewall of request ips..
-    # virtual env uwsgi just so that nothing breaks when you add more projects.
 
     # create temp file
     temp = tempfile.NamedTemporaryFile(suffix='.'+ext)
@@ -48,10 +45,16 @@ def extract():
     urllib.request.install_opener(opener)
 
     # load url into temp file
-    urllib.request.urlretrieve(url, temp.name)
+    try:
+        urllib.request.urlretrieve(url, temp.name)
+    except:
+        return jsonify({"success": False, "error": "Could not load file from URL"}), 400
 
     # process it
-    text = textract.process(temp.name, extension=ext, encoding = 'unicode_escape')
+    try:
+        text = textract.process(temp.name, extension=ext, encoding = 'unicode_escape')
+    except:
+        return jsonify({"success": False, "error": "Could not process file"}), 400
 
     # close temp file
     temp.close()
