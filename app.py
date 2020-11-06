@@ -35,7 +35,6 @@ def extract():
     # add binary file input
     # add some max file size validation. 100M?
     # uwsgi - make sure it works when you close terminal, and on boot. Errors can be seen from worker, log them somewhere. supervisor
-    # definitely need some formatting - all start with b'
     # restart server on changes
     # add firewall of request ips..
     # virtual env uwsgi just so that nothing breaks when you add more projects.
@@ -65,4 +64,4 @@ def extract():
     return resp
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
