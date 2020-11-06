@@ -16,7 +16,7 @@ def extract():
         return jsonify({"success": False, "error": "Missing JSON in request"}), 400
 
     url = request.json.get("url", None)
-    ext = request.json.get("ext", None)
+    ext = request.json.get("extension", None)
 
     if not url:
         return jsonify({"success": False, "error": "URL is required"}), 400
@@ -29,9 +29,12 @@ def extract():
     if ext not in supportedExts:
         return jsonify({"success": False, "error": "Unsupported extension. Supported extensions: " + ', '.join(supportedExts)}), 400
 
-    # jsonify errors, and add try/catch for loading and parsing
+    # add try/catch for loading and parsing
     # add binary file input
     # mp3 parsing doesnt work - try deploying on lambda first..
+    # add some max file size validation
+    # set up ssl
+    # set up that server on boot and test
 
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36')]
