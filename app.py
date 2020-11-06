@@ -13,6 +13,7 @@ app.config['JSON_SORT_KEYS'] = False
 def extract():
     supportedExts = ["csv", "doc", "docx", "eml", "epub", "gif", "jpg", "jpeg", "json", "html", "htm", "mp3", "msg", "odt", "ogg", "pdf", "png", "pptx", "ps", "rtf", "tiff", "tif", "txt", "wav", "xlsx", "xls"]
 
+    # parse/validate request
     if not request.is_json:
         return jsonify({"success": False, "error": "Missing JSON in request"}), 400
 
@@ -35,15 +36,26 @@ def extract():
     # add some max file size validation
     # uwsgi - make sure it works when you close terminal, and on boot. Errors can be seen from worker, log them somewhere
     # mp3 parsing - missing extension, add suffix to temp file, or just name temp file same as source file
+    # restart server on changes
 
     # create temp file
     temp = tempfile.NamedTemporaryFile(suffix='.'+ext)
 
+    # set user agent as to not get 403s
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36')]
     urllib.request.install_opener(opener)
+
+    # load url into temp file
     urllib.request.urlretrieve(url, temp.name)
+
+    # process it
     text = textract.process(temp.name, extension=ext)
+
+    # close temp file
+    temp.close()
+
+    # respond
     resp = {}
     resp['success'] = True
     resp['text'] = str(text)
