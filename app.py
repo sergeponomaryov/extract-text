@@ -33,10 +33,12 @@ def extract():
 
     # add try/catch for loading and parsing
     # add binary file input
-    # add some max file size validation
-    # uwsgi - make sure it works when you close terminal, and on boot. Errors can be seen from worker, log them somewhere
-    # mp3 parsing - missing extension, add suffix to temp file, or just name temp file same as source file
+    # add some max file size validation. 100M?
+    # uwsgi - make sure it works when you close terminal, and on boot. Errors can be seen from worker, log them somewhere. supervisor
+    # definitely need some formatting - all start with b'
     # restart server on changes
+    # add firewall of request ips..
+    # virtual env uwsgi just so that nothing breaks when you add more projects.
 
     # create temp file
     temp = tempfile.NamedTemporaryFile(suffix='.'+ext)
@@ -50,7 +52,7 @@ def extract():
     urllib.request.urlretrieve(url, temp.name)
 
     # process it
-    text = textract.process(temp.name, extension=ext)
+    text = textract.process(temp.name, extension=ext, encoding = 'unicode_escape')
 
     # close temp file
     temp.close()
@@ -58,9 +60,9 @@ def extract():
     # respond
     resp = {}
     resp['success'] = True
-    resp['text'] = str(text)
+    resp['text'] = text.decode("utf-8")
 
-    return jsonify(resp)
+    return resp
 
 if __name__ == '__main__':
     app.run()
