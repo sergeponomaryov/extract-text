@@ -1,7 +1,7 @@
-import urllib.request
-from os.path import splitext
-from urllib.parse import urlparse
 import tempfile
+import urllib.request
+from urllib.parse import urlparse
+from os.path import splitext
 
 import textract
 from flask import Flask, jsonify, request
@@ -32,7 +32,6 @@ def extract():
         return jsonify({"success": False, "error": "Unsupported extension. Supported extensions: " + ', '.join(supportedExts)}), 400
 
     # add binary file input
-    # add some max file size validation. 100M?
     # add firewall of request ips..
 
     # create temp file
