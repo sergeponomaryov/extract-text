@@ -31,7 +31,7 @@ def extract():
     if ext not in supportedExts:
         return jsonify({"success": False, "error": "Unsupported extension. Supported extensions: " + ', '.join(supportedExts)}), 400
 
-    # add binary file input
+    # add binary file input - no just deploy it and be done with it and do react dont waste time
     # add firewall of request ips..
 
     # create temp file
