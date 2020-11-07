@@ -31,7 +31,6 @@ def extract():
     if ext not in supportedExts:
         return jsonify({"success": False, "error": "Unsupported extension. Supported extensions: " + ', '.join(supportedExts)}), 400
 
-    # add try/catch for loading and parsing
     # add binary file input
     # add some max file size validation. 100M?
     # add firewall of request ips..
@@ -48,12 +47,14 @@ def extract():
     try:
         urllib.request.urlretrieve(url, temp.name)
     except:
+        temp.close()
         return jsonify({"success": False, "error": "Could not load file from URL"}), 400
 
     # process it
     try:
         text = textract.process(temp.name, extension=ext, encoding = 'unicode_escape')
     except:
+        temp.close()
         return jsonify({"success": False, "error": "Could not process file"}), 400
 
     # close temp file
